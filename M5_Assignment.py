@@ -14,21 +14,28 @@ metadata = {'apiLevel': '2.8'}
 protocol = simulate.get_protocol_api('2.8')
 tempdeck = protocol.load_module('temperature module gen2', 4)
 
-#Labware
-plate = protocol.load_labware('corning_96_wellplate_360ul_flat', 1)
-tiprack_1 = protocol.load_labware('opentrons_96_tiprack_300ul', 2)
-tiprack_2 = protocol.load_labware('opentrons_96_tiprack_300ul', 5)
-reservoir = protocol.load_labware('usascientific_12_reservoir_22ml', 3)
-
-cool_reagents = tempdeck.load_labware('opentrons_24_aluminumblock_generic_2ml_screwcap')
-tempdeck.set_temperature(4) # set block to 4°C
-tempdeck.await_temperature(4)
-print("Cooling block temperature =",tempdeck.temperature,"°C")
 
 #pipettes
 p300_1 = protocol.load_instrument('p300_single_gen2', 'right', tip_racks=[tiprack_1])
 p300_2 = protocol.load_instrument('p300_multi', 'left', tip_racks=[tiprack_2])
 protocol.max_speeds['Z'] = 10
+
+#Labware
+plate = protocol.load_labware('corning_96_wellplate_360ul_flat', 1)
+tempdeck = protocol.load_module('temperature module gen2', 3)
+reservoir = protocol.load_labware('usascientific_12_reservoir_22ml', 4) # May need 2
+tuberack = protocol.load_labware("opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap", 5) # <- Optional, may have enough space in the temp block
+tiprack_1 = protocol.load_labware('opentrons_96_tiprack_300ul', 7)
+tiprack_2 = protocol.load_labware('opentrons_96_tiprack_300ul', 8) # At some point we should count how many tips we will need for 1 full protocol/ per well
+tiprack_3 = protocol.load_labware('opentrons_96_tiprack_300ul', 9)
+#Temperature control
+cool_reagents = tempdeck.load_labware('opentrons_24_aluminumblock_generic_2ml_screwcap')
+tempdeck.set_temperature(4) # set block to 4°C
+tempdeck.await_temperature(4)
+print("Cooling block temperature =",tempdeck.temperature,"°C")
+#tempdeck.deactivate # <- Need to turn off at end of protocol
+
+
 
 
 samples = int(input("Enter number of samples "))
